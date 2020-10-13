@@ -4,7 +4,7 @@
 
 ## :rocket: Sobre o desafio
 
-Nesse desafio, você deve criar uma aplicação utilizando o Parse Server + Node.js que irá possibilitar o cadastramento de filmes, listagem dos filmes e atualização dos filmes.
+Nesse desafio, você deve criar uma aplicação utilizando o Parse Server + Node.js que irá possibilitar o cadastramento de filmes, listagem dos filmes, atualização dos filmes e busca.
 
 A Aplicação não precisa conter interface visual. O que importa é seu style code, patterns usados e boas práticas usando JS.
 ### Requisitos
@@ -13,6 +13,8 @@ A Aplicação não precisa conter interface visual. O que importa é seu style c
 *Todos os dados devem ser persistidos no banco de dados do ParseServer
 
 **Listar Filmes** Sua aplicação deverá conter um endpoint para possibilitar a listagem dos filmes, retornando uma lista em JSON.
+
+**Atualizar Filme** Sua aplicação deverá conter um endpoint para possibilitar a atualização de um filme pelo ObjectId dele no parse.
 
 **Buscar filmes** Sua aplicação deverá conter um endpoint que permita a busca de filmes através dos seguintes parâmetros (Título, data de lançamento)
 
