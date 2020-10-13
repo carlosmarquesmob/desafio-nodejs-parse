@@ -9,6 +9,8 @@ Nesse desafio, você deve criar uma aplicação utilizando o Parse Server + Node
 A Aplicação não precisa conter interface visual. O que importa é seu style code, patterns usados e boas práticas usando JS.
 ### Requisitos
 
+-**Autenticação** Criar um endpoint para autenticação passando um email e uma senha e retornando um token que deverá ser usado para acessar todas outras requisições. Recomendamos usar o JWT.
+
 **Cadastrar Filmes** Sua aplicação deverá conter um endpoint para possibilitar a inserção de novos filmes(um ou mais) com os seguintes campos (Título, descrição, poster(imagem), data de lançamento. 
 *Todos os dados devem ser persistidos no banco de dados do ParseServer
 
@@ -18,6 +20,7 @@ A Aplicação não precisa conter interface visual. O que importa é seu style c
 
 **Buscar filmes** Sua aplicação deverá conter um endpoint que permita a busca de filmes através dos seguintes parâmetros (Título, data de lançamento)
 
+**Live Query** 
 ### Diferenciais
  - Os testes não são obrigatórios mas iremos adorar caso você implemente. Aqui na Mob, usamos a lib Mocha.
  - Arquitetura do projeto. Mais importante que a aplicação funcionar é seu style code e como você arquiteturou a solução.
