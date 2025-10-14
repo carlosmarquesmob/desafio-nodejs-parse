@@ -7,9 +7,10 @@ interface InitParseProps {
     serverURL: string
 }
 
-export function initParse({ appId, masterKey, serverURL }: InitParseProps) {
+export async function initParse({ appId, masterKey, serverURL }: InitParseProps) {
     Parse.initialize(appId, "")
-    Parse.CoreManager.set("MASTER_KEY", masterKey)
     Parse.serverURL = serverURL
+    Parse.masterKey = masterKey
+
     return Parse
 }
