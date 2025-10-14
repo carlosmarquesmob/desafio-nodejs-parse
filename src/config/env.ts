@@ -1,6 +1,8 @@
 import z from "zod";
+import "dotenv/config";
 
 const envSchema = z.object({
+    PORT: z.coerce.number(),
     PARSE_URL: z.string(),
     PARSE_APP_ID: z.string(),
     PARSE_MASTER_KEY: z.string()
