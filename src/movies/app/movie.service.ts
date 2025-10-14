@@ -1,3 +1,4 @@
+import { NotFoundException } from "src/common/exceptions/not-found-exception";
 import { CreateMovieDTO } from "./dto/create-movie.dto";
 import { MovieDTO } from "./dto/movie.dto";
 import { Movie } from "./entities/movie";
@@ -30,4 +31,11 @@ export class MovieService {
         return await this.persistMovie.findAll(limit)
     }
 
+    async findMovieById(id: string): Promise<Movie> {
+        const movie = await this.persistMovie.findById(id)
+        if(!movie) {
+            throw new NotFoundException("Movie not found")
+        }
+        return movie
+    }
 }

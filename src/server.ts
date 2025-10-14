@@ -4,6 +4,7 @@ import { fastify } from 'fastify'
 import { validatorCompiler, serializerCompiler, ZodTypeProvider, jsonSchemaTransform } from "fastify-type-provider-zod"
 import { fastifySwaggerUi } from "@fastify/swagger-ui"
 import { movieRoutes } from './movies/infra/movie.handler'
+import { errorHandler } from './common/handlers/error-handler'
 
 const app = fastify().withTypeProvider<ZodTypeProvider>()
 
@@ -25,5 +26,7 @@ app.register(fastifySwagger, {
 app.register(fastifySwaggerUi, { routePrefix: "/docs" })
 
 app.register(movieRoutes, { prefix: "/movies" })
+
+app.setErrorHandler(errorHandler)
 
 export default app

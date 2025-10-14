@@ -27,5 +27,19 @@ export class ParseMoviePersist implements PersistMovieData {
         const result = await query.find({ useMasterKey: true })
         return result.map(toPersistMovieDomain)
     }
-
+    
+    async findById(id: string): Promise<Movie | null> {
+        try {
+            const query = new Parse.Query(CLASS)
+            const result = await query.get(id, { useMasterKey: true })
+            if(!result) return null
+            return toPersistMovieDomain(result) 
+        } catch(err) {
+            if(err.code === 101) {
+                return null // not found
+            }
+            console.error("Parse save error:", err)
+            throw err
+        }
+    }
 }
