@@ -41,12 +41,22 @@ export async function movieRoutes(app: FastifyTypedInstance) {
             tags: swaggerTags,
             summary: "List All Movies",
             querystring: z.object({
-                limit: z.coerce.number().optional()
+                limit: z.coerce.number().optional(),
+                page: z.coerce.number().optional(),
+                title: z.string().optional(),
+                year: z.coerce.number().optional(),
+                genres: z.string().optional()
             })
         }
     }, async (req, reply) => {
-        const { limit } = req.query
-        const movies = await movieService.listMovies(limit)
+        let { limit, genres, page, title, year } = req.query
+
+        if(!limit || limit < 0) limit = 10
+        if(!page || page < 0) page = 1
+
+        const movies = await movieService.listMovies({
+            page, limit, genres, title, year
+        })
 
         return reply.code(200).send(movies)
     })

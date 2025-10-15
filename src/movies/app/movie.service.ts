@@ -4,6 +4,7 @@ import { MovieDTO } from "./dto/movie.dto";
 import { Movie } from "./entities/movie";
 import { PersistMovieData } from "./persist-data/movie.persist";
 import { UpdateMovieDTO } from "./dto/update-movie.dto";
+import { ListMovidesDTO } from "./dto/list-movies.dto";
 
 export class MovieService {
 
@@ -28,8 +29,11 @@ export class MovieService {
         return await this.persistMovie.create(movies)
     }
 
-    async listMovies(limit: number = 10): Promise<MovieDTO[]> {
-        return await this.persistMovie.findAll(limit)
+    async listMovies(dto: ListMovidesDTO): Promise<MovieDTO[]> {
+        const { limit, page, genres, title, year } = dto
+        return await this.persistMovie.findAll(
+            page, limit, title, year, genres
+        )
     }
 
     async findMovieById(id: string): Promise<Movie> {

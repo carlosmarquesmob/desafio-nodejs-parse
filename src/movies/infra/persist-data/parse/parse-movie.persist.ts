@@ -19,11 +19,20 @@ export class ParseMoviePersist implements PersistMovieData {
         }
     }
 
-    async findAll(limit: number): Promise<Movie[]> {
+    async findAll(
+        page: number, limit: number, title?: string, year?: number, genres?: string
+    ): Promise<Movie[]> {
         const query = new Parse.Query(this.CLASS)
+
+        query.skip((page - 1) * limit)
         query.limit(limit)
 
+        if(title) query.contains("title", title)
+        if(year) query.equalTo("year", year)
+        if(genres) query.contains("genres", genres)
+
         const result = await query.find({ useMasterKey: true })
+
         return result.map(toPersistMovieDomain)
     }
     

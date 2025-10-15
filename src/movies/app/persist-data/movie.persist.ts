@@ -3,7 +3,9 @@ import { Movie } from "../entities/movie";
 export interface PersistMovieData {
 
     create(movies: Movie[]): Promise<Movie[]>
-    findAll(limit: number): Promise<Movie[]>
+    findAll(
+        page: number, limit: number, title?: string, year?: number, genres?: string
+    ): Promise<Movie[]>
     findById(id: string): Promise<Movie | null>
     update(
         id: string, 
