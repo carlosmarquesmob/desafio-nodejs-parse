@@ -51,8 +51,8 @@ export async function movieRoutes(app: FastifyTypedInstance) {
     }, async (req, reply) => {
         let { limit, genres, page, title, year } = req.query
 
-        if(!limit || limit < 0) limit = 10
-        if(!page || page < 0) page = 1
+        if(!limit || limit < 1) limit = 10
+        if(!page || page < 1) page = 1
 
         const movies = await movieService.listMovies({
             page, limit, genres, title, year
