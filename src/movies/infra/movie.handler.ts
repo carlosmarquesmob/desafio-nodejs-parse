@@ -65,4 +65,27 @@ export async function movieRoutes(app: FastifyTypedInstance) {
 
         return reply.code(200).send(movie)
     })
+
+    r.put(":id", {
+        schema: {
+            tags: swaggerTags,
+            summary: "Update Movie",
+            params: z.object({
+                id: z.string()
+            }),
+            body: z.object({
+                title: z.string().nonempty().optional(),
+                description: z.string().nonempty().optional(),
+                year: z.coerce.number().optional(),
+                genres: z.string().nonempty().optional(),
+                director: z.string().nonempty().optional()
+            })
+        }
+    }, async (req, reply) => {
+        const { id } = req.params
+        const movieBody = req.body
+        const movie = await movieService.updateMovie(id, movieBody)
+
+        return reply.code(200).send(movie)
+    })
 }

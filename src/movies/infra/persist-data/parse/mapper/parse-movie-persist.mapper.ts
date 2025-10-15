@@ -1,20 +1,18 @@
 import { Movie } from "src/movies/app/entities/movie";
 
 export function toParseMoviePersist(
-    movies: Movie[], 
+    movie: Movie, 
     MovieObject: new () => Parse.Object
 ) {
-    return movies.map((movie) => {
-        const object = new MovieObject()
-        object.set("title", movie.title)
-        object.set("description", movie.description)
-        if(movie.year) object.set("year", movie.year)
-        if(movie.director) object.set("director", movie.director)
-        if(movie.genres) object.set("genres", movie.genres)
-        object.set("createdAt", movie.createAt)
-        object.set("updatedAt", movie.updatedAt)
-        return object
-    })
+    const object = new MovieObject()
+    object.set("title", movie.title)
+    object.set("description", movie.description)
+    if(movie.year) object.set("year", movie.year)
+    if(movie.director) object.set("director", movie.director)
+    if(movie.genres) object.set("genres", movie.genres)
+    object.set("createdAt", movie.createAt)
+    object.set("updatedAt", movie.updatedAt)
+    return object
 }
 
 export function toPersistMovieDomain(

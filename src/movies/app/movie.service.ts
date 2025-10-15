@@ -3,6 +3,7 @@ import { CreateMovieDTO } from "./dto/create-movie.dto";
 import { MovieDTO } from "./dto/movie.dto";
 import { Movie } from "./entities/movie";
 import { PersistMovieData } from "./persist-data/movie.persist";
+import { UpdateMovieDTO } from "./dto/update-movie.dto";
 
 export class MovieService {
 
@@ -37,5 +38,18 @@ export class MovieService {
             throw new NotFoundException("Movie not found")
         }
         return movie
+    }
+
+    async updateMovie(movieId: string, dto: UpdateMovieDTO): Promise<void> {
+        const movie = await this.persistMovie.findById(movieId)
+        if(!movie) {
+            throw new NotFoundException("Movie not found")
+        }
+
+        const { title, description, director, genres, year } = dto
+
+        await this.persistMovie.update(movieId, {
+            title, description, director, genres, year
+        })
     }
 }
