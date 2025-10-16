@@ -21,7 +21,9 @@ export class ParseMoviePersist implements PersistMovieData {
             const movieObject = await Parse.Object.saveAll(moviesObjects, { useMasterKey: true })
             return movieObject.map(toPersistMovieDomain)
         } catch (err) {
-            this.log.error("Failed to persis movie in Parse Server: ", err)
+            parseServerErrorHandler({
+                err, log: this.log, className: "MOVIE", action: "create movie"
+            })
             throw err
         }
     }
@@ -29,18 +31,25 @@ export class ParseMoviePersist implements PersistMovieData {
     async findAll(
         page: number, limit: number, title?: string, year?: number, genres?: string
     ): Promise<Movie[]> {
-        const query = new Parse.Query(CLASS)
+        try {
+            const query = new Parse.Query(CLASS)
 
-        query.skip((page - 1) * limit)
-        query.limit(limit)
+            query.skip((page - 1) * limit)
+            query.limit(limit)
 
-        if(title) query.contains("title", title)
-        if(year) query.equalTo("year", year)
-        if(genres) query.contains("genres", genres)
+            if(title) query.contains("title", title)
+            if(year) query.equalTo("year", year)
+            if(genres) query.contains("genres", genres)
 
-        const result = await query.find({ useMasterKey: true })
+            const result = await query.find({ useMasterKey: true })
 
-        return result.map(toPersistMovieDomain)
+            return result.map(toPersistMovieDomain)
+        }catch(err) {
+            parseServerErrorHandler({
+                err, log: this.log, className: "MOVIE", action: "find all movies"
+            })
+            throw err
+        }
     }
     
     async findById(id: string): Promise<Movie | null> {
@@ -53,6 +62,9 @@ export class ParseMoviePersist implements PersistMovieData {
             if(err.code === 101) {
                 return null // not found
             }
+            parseServerErrorHandler({
+                err, log: this.log, className: "MOVIE", action: "find movie"
+            })
             throw err
         }
     }
@@ -74,6 +86,9 @@ export class ParseMoviePersist implements PersistMovieData {
 
             await movieParse.save({ useMasterKey: true })
         } catch(err) {
+            parseServerErrorHandler({
+                err, log: this.log, className: "MOVIE", action: "update movie"
+            })
             throw err
         }
     }
@@ -84,6 +99,9 @@ export class ParseMoviePersist implements PersistMovieData {
             movieParse.set("id", id)
             await movieParse.destroy({ useMasterKey: true })
         }catch(err) {
+            parseServerErrorHandler({
+                err, log: this.log, className: "MOVIE", action: "delete movie"
+            })
             throw err
         }
     }
