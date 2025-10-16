@@ -4,6 +4,7 @@ import { BadRequestException } from "../exceptions/bad-request-exception";
 import { NetworkErrorException } from "../exceptions/network-error-exception";
 import { PermissionDeniedException } from "../exceptions/permission-denied-exception";
 import { ConflictException } from "../exceptions/conflict-exception";
+import { UnauthorizedException } from "../exceptions/unauthorized-exception";
 
 export async function errorHandler(
     err: FastifyError, 
@@ -33,7 +34,7 @@ export async function errorHandler(
         return replyError(400)
     } else if(err instanceof NetworkErrorException) {
         return replyError(503)
-    } else if(err instanceof PermissionDeniedException) {
+    } else if(err instanceof PermissionDeniedException || err instanceof UnauthorizedException) {
         return replyError(401)
     } else if(err instanceof ConflictException) {
         return replyError(409)

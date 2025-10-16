@@ -3,6 +3,7 @@ import { PermissionDeniedException } from "../exceptions/permission-denied-excep
 import { NetworkErrorException } from "../exceptions/network-error-exception";
 import { BadRequestException } from "../exceptions/bad-request-exception";
 import { ConflictException } from "../exceptions/conflict-exception";
+import { UnauthorizedException } from "../exceptions/unauthorized-exception";
 
 interface ParseServerErrorHandlerProps {
     err: any
@@ -24,6 +25,8 @@ export function parseServerErrorHandler(
     switch(err.code) {
         case 103:
             throw new BadRequestException("Invalid JSON format")
+        case 101:
+            throw new UnauthorizedException("Invalid credentials")
         case 141:
             throw new BadRequestException("Invalid query parameters")
         case 142:
