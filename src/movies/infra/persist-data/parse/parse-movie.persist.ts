@@ -59,8 +59,8 @@ export class ParseMoviePersist implements PersistMovieData {
             if(!result) return null
             return toPersistMovieDomain(result) 
         } catch(err) {
-            if(err.code === 101) {
-                return null // not found
+            if(err.code === Parse.Error.OBJECT_NOT_FOUND) {
+                return null
             }
             parseServerErrorHandler({
                 err, log: this.log, className: "MOVIE", action: "find movie"
