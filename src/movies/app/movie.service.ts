@@ -22,7 +22,7 @@ export class MovieService {
                 director, 
                 genres,
                 year,
-                createAt: date,
+                createdAt: date,
                 updatedAt: date
             })   
         })
@@ -55,5 +55,14 @@ export class MovieService {
         await this.persistMovie.update(movieId, {
             title, description, director, genres, year
         })
+    }
+
+    async deleteMovie(movieId: string) {
+        const movie = await this.persistMovie.findById(movieId)
+        if(!movie) {
+            throw new NotFoundException("Movie not found")
+        }
+
+        await this.persistMovie.delete(movieId)
     }
 }

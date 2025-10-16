@@ -4,15 +4,12 @@ import { ParseMoviePersist } from "./persist-data/parse/parse-movie.persist"
 import { ZodTypeProvider } from "fastify-type-provider-zod/dist/esm"
 import { FastifyTypedInstance } from "src/common/@types/fastify-typed-instance"
 
-const movieService = new MovieService(
-    new ParseMoviePersist()
-)
-
 const swaggerTags = ["Movies"]
 
 export async function movieRoutes(app: FastifyTypedInstance) {
-
     const r = app.withTypeProvider<ZodTypeProvider>()
+
+    const movieService = new MovieService(new ParseMoviePersist(app.log))
 
     r.post("/", {
         schema: {
@@ -94,8 +91,23 @@ export async function movieRoutes(app: FastifyTypedInstance) {
     }, async (req, reply) => {
         const { id } = req.params
         const movieBody = req.body
-        const movie = await movieService.updateMovie(id, movieBody)
+        await movieService.updateMovie(id, movieBody)
 
-        return reply.code(200).send(movie)
+        return reply.code(200).send({ message: "Movie updated successfully" })
+    })
+
+    r.delete(":id", {
+        schema: {
+            tags: swaggerTags,
+            summary: "Delete Movie",
+            params: z.object({
+                id: z.string()
+            })
+        }
+    }, async (req, reply) => {
+        const { id } = req.params
+        await movieService.deleteMovie(id)
+
+        return reply.code(204).send({ message: "Movie deleted successfully" })
     })
 }

@@ -10,7 +10,7 @@ export function toParseMoviePersist(
     if(movie.year) object.set("year", movie.year)
     if(movie.director) object.set("director", movie.director)
     if(movie.genres) object.set("genres", movie.genres)
-    object.set("createdAt", movie.createAt)
+    object.set("createdAt", movie.createdAt)
     object.set("updatedAt", movie.updatedAt)
     return object
 }
@@ -18,14 +18,15 @@ export function toParseMoviePersist(
 export function toPersistMovieDomain(
     parseObject: Parse.Object
 ): Movie {
+    const { title, description, year, director, genres, createdAt, updatedAt } = parseObject.attributes
     return new Movie({
-        id: parseObject.id,
-        title: parseObject.get("title"),
-        description: parseObject.get("description"),
-        year: parseObject.get("year"),
-        director: parseObject.get("director"),
-        genres: parseObject.get("genres"),
-        createAt: parseObject.get("createdAt"),
-        updatedAt: parseObject.get("updatedAt"),
+        id: parseObject._getId(),
+        title,
+        description,
+        year,
+        director,
+        genres,
+        createdAt,
+        updatedAt,
     })
 }

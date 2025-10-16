@@ -6,7 +6,7 @@ export class Movie {
     year?: number
     director?: string
     genres?: string
-    createAt: Date
+    createdAt: Date
     updatedAt: Date
 
     constructor(data: Partial<Movie>) {

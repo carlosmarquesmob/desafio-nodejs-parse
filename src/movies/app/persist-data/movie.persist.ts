@@ -11,5 +11,6 @@ export interface PersistMovieData {
         id: string, 
         movie: Partial<Pick<Movie, "title" | "description" | "director" | "genres" | "year">>
     ): Promise<void>
+    delete(id: string): Promise<void>
 
 }

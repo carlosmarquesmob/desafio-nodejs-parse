@@ -2,19 +2,26 @@ import Parse from "parse/node"
 import { Movie } from "src/movies/app/entities/movie"
 import { PersistMovieData } from "src/movies/app/persist-data/movie.persist"
 import { toParseMoviePersist, toPersistMovieDomain } from "./mapper/parse-movie-persist.mapper"
+import { FastifyBaseLogger } from "fastify"
+import { parseServerErrorHandler } from "src/common/handlers/parse-server-error-handler"
+
+const CLASS = "Movie"
+const MovieObject = Parse.Object.extend(CLASS) as new () => Parse.Object
 
 export class ParseMoviePersist implements PersistMovieData {
 
-    private CLASS = "Movie"
-    private MovieObject = Parse.Object.extend(this.CLASS)
+    constructor(
+        private readonly log: FastifyBaseLogger
+    ) {}
 
     async create(movies: Movie[]): Promise<Movie[]> {
         try {
-            const moviesObjects = movies.map((m) => toParseMoviePersist(m, this.MovieObject))
+            const moviesObjects = movies.map((m) => toParseMoviePersist(m, MovieObject))
             
             const movieObject = await Parse.Object.saveAll(moviesObjects, { useMasterKey: true })
             return movieObject.map(toPersistMovieDomain)
         } catch (err) {
+            this.log.error("Failed to persis movie in Parse Server: ", err)
             throw err
         }
     }
@@ -22,7 +29,7 @@ export class ParseMoviePersist implements PersistMovieData {
     async findAll(
         page: number, limit: number, title?: string, year?: number, genres?: string
     ): Promise<Movie[]> {
-        const query = new Parse.Query(this.CLASS)
+        const query = new Parse.Query(CLASS)
 
         query.skip((page - 1) * limit)
         query.limit(limit)
@@ -38,7 +45,7 @@ export class ParseMoviePersist implements PersistMovieData {
     
     async findById(id: string): Promise<Movie | null> {
         try {
-            const query = new Parse.Query(this.CLASS)
+            const query = new Parse.Query(CLASS)
             const result = await query.get(id, { useMasterKey: true })
             if(!result) return null
             return toPersistMovieDomain(result) 
@@ -55,7 +62,7 @@ export class ParseMoviePersist implements PersistMovieData {
         movie: Partial<Pick<Movie, "title" | "description" | "director" | "genres" | "year">>
     ): Promise<void> {
         try {
-            const movieParse = new this.MovieObject()
+            const movieParse = new MovieObject()
 
             movieParse.set("id", id)
 
@@ -67,6 +74,16 @@ export class ParseMoviePersist implements PersistMovieData {
 
             await movieParse.save({ useMasterKey: true })
         } catch(err) {
+            throw err
+        }
+    }
+
+    async delete(id: string): Promise<void> {
+        try{
+            const movieParse = new MovieObject()
+            movieParse.set("id", id)
+            await movieParse.destroy({ useMasterKey: true })
+        }catch(err) {
             throw err
         }
     }
