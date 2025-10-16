@@ -16,7 +16,6 @@ export class UserService {
         return {
             id: user.id,
             name: user.name,
-            username: user.username,
             email: user.email,
             emailVerified: user.emailVerified,
             createdAt: user.createdAt,

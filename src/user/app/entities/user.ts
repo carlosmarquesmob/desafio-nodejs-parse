@@ -2,7 +2,6 @@ export class User {
 
     id: string
     name: string
-    username: string
     email: string
     password: string
     emailVerified: boolean
@@ -10,6 +9,6 @@ export class User {
     updatedAt: Date
 
     constructor(data: Partial<User>) {
-        Object.assign(data, this)
+        Object.assign(this, data)
     }
 }
