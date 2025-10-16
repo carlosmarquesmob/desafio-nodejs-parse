@@ -3,6 +3,7 @@ export class Movie {
     id: string
     title: string
     description: string
+    userId: string
     year?: number
     director?: string
     genres?: string

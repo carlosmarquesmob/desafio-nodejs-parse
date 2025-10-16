@@ -12,11 +12,12 @@ export class MovieService {
         private readonly persistMovie: PersistMovieData
     ) {}
 
-    async createMovie(dto: CreateMovieDTO[]): Promise<MovieDTO[]> {
+    async createMovie(userId: string, dto: CreateMovieDTO[]): Promise<MovieDTO[]> {
         const movies = dto.map(d => {
             const { title, description, director, genres, year } = d
             const date = new Date()
             return new Movie({
+                userId,
                 title,
                 description,
                 director, 
@@ -26,26 +27,27 @@ export class MovieService {
                 updatedAt: date
             })   
         })
+        
         return await this.persistMovie.create(movies)
     }
 
-    async listMovies(dto: ListMovidesDTO): Promise<MovieDTO[]> {
+    async listMovies(userId: string, dto: ListMovidesDTO): Promise<MovieDTO[]> {
         const { limit, page, genres, title, year } = dto
         return await this.persistMovie.findAll(
-            page, limit, title, year, genres
+            userId, page, limit, title, year, genres
         )
     }
 
-    async findMovieById(id: string): Promise<Movie> {
-        const movie = await this.persistMovie.findById(id)
+    async findMovieById(userId: string, id: string): Promise<Movie> {
+        const movie = await this.persistMovie.findById(userId, id)
         if(!movie) {
             throw new NotFoundException("Movie not found")
         }
         return movie
     }
 
-    async updateMovie(movieId: string, dto: UpdateMovieDTO): Promise<void> {
-        const movie = await this.persistMovie.findById(movieId)
+    async updateMovie(userId: string, movieId: string, dto: UpdateMovieDTO): Promise<void> {
+        const movie = await this.persistMovie.findById(userId, movieId)
         if(!movie) {
             throw new NotFoundException("Movie not found")
         }
@@ -57,8 +59,8 @@ export class MovieService {
         })
     }
 
-    async deleteMovie(movieId: string) {
-        const movie = await this.persistMovie.findById(movieId)
+    async deleteMovie(userId: string, movieId: string) {
+        const movie = await this.persistMovie.findById(userId, movieId)
         if(!movie) {
             throw new NotFoundException("Movie not found")
         }

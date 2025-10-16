@@ -3,11 +3,14 @@ import { MovieService } from "../app/movie.service"
 import { ParseMoviePersist } from "./persist-data/parse/parse-movie.persist"
 import { ZodTypeProvider } from "fastify-type-provider-zod/dist/esm"
 import { FastifyTypedInstance } from "src/common/@types/fastify-typed-instance"
+import { authMiddleware } from "src/common/middlewares/auth.middleware"
 
 const swaggerTags = ["Movies"]
 
 export async function movieRoutes(app: FastifyTypedInstance) {
     const r = app.withTypeProvider<ZodTypeProvider>()
+
+    r.addHook("preHandler", authMiddleware)
 
     const movieService = new MovieService(new ParseMoviePersist(app.log))
 
@@ -16,6 +19,7 @@ export async function movieRoutes(app: FastifyTypedInstance) {
             tags: swaggerTags,
             summary: "Create movies",
             description: "Create one or more movies",
+            security: [{ bearerAuth: [] }],
             body: z.array(
                 z.object({
                     title: z.string(),
@@ -28,7 +32,8 @@ export async function movieRoutes(app: FastifyTypedInstance) {
         }
     }, async (req, reply) => {
         const movies = req.body
-        const moviesCreated = await movieService.createMovie(movies)
+        const { currentUser } = req
+        const moviesCreated = await movieService.createMovie(currentUser.id!, movies)
 
         return reply.code(201).send(moviesCreated)
     })
@@ -37,6 +42,7 @@ export async function movieRoutes(app: FastifyTypedInstance) {
         schema: {
             tags: swaggerTags,
             summary: "List All Movies",
+            security: [{ bearerAuth: [] }],
             querystring: z.object({
                 limit: z.coerce.number().optional(),
                 page: z.coerce.number().optional(),
@@ -47,11 +53,12 @@ export async function movieRoutes(app: FastifyTypedInstance) {
         }
     }, async (req, reply) => {
         let { limit, genres, page, title, year } = req.query
+        const { currentUser } = req
 
         if(!limit || limit < 1) limit = 10
         if(!page || page < 1) page = 1
 
-        const movies = await movieService.listMovies({
+        const movies = await movieService.listMovies(currentUser.id!, {
             page, limit, genres, title, year
         })
 
@@ -62,13 +69,15 @@ export async function movieRoutes(app: FastifyTypedInstance) {
         schema: {
             tags: swaggerTags,
             summary: "Find Movie By Id",
+            security: [{ bearerAuth: [] }],
             params: z.object({
                 id: z.string()
             })
         }
     }, async (req, reply) => {
         const { id } = req.params
-        const movie = await movieService.findMovieById(id)
+        const { currentUser } = req
+        const movie = await movieService.findMovieById(currentUser.id!, id)
 
         return reply.code(200).send(movie)
     })
@@ -77,6 +86,7 @@ export async function movieRoutes(app: FastifyTypedInstance) {
         schema: {
             tags: swaggerTags,
             summary: "Update Movie",
+            security: [{ bearerAuth: [] }],
             params: z.object({
                 id: z.string()
             }),
@@ -91,7 +101,9 @@ export async function movieRoutes(app: FastifyTypedInstance) {
     }, async (req, reply) => {
         const { id } = req.params
         const movieBody = req.body
-        await movieService.updateMovie(id, movieBody)
+        const { currentUser } = req
+
+        await movieService.updateMovie(currentUser.id!, id, movieBody)
 
         return reply.code(200).send({ message: "Movie updated successfully" })
     })
@@ -100,13 +112,16 @@ export async function movieRoutes(app: FastifyTypedInstance) {
         schema: {
             tags: swaggerTags,
             summary: "Delete Movie",
+            security: [{ bearerAuth: [] }],
             params: z.object({
                 id: z.string()
             })
         }
     }, async (req, reply) => {
         const { id } = req.params
-        await movieService.deleteMovie(id)
+        const { currentUser } = req
+
+        await movieService.deleteMovie(currentUser.id!, id)
 
         return reply.code(204).send({ message: "Movie deleted successfully" })
     })

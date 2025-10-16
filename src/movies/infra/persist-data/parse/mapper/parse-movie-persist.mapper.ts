@@ -5,6 +5,7 @@ export function toParseMoviePersist(
     MovieObject: new () => Parse.Object
 ) {
     const object = new MovieObject()
+    object.set("userId", movie.userId)
     object.set("title", movie.title)
     object.set("description", movie.description)
     if(movie.year) object.set("year", movie.year)
@@ -18,9 +19,10 @@ export function toParseMoviePersist(
 export function toPersistMovieDomain(
     parseObject: Parse.Object
 ): Movie {
-    const { title, description, year, director, genres, createdAt, updatedAt } = parseObject.attributes
+    const { userId, title, description, year, director, genres, createdAt, updatedAt } = parseObject.attributes
     return new Movie({
         id: parseObject._getId(),
+        userId,
         title,
         description,
         year,

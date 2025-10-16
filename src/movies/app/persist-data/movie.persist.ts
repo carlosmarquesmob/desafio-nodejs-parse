@@ -4,9 +4,9 @@ export interface PersistMovieData {
 
     create(movies: Movie[]): Promise<Movie[]>
     findAll(
-        page: number, limit: number, title?: string, year?: number, genres?: string
+        userId: string, page: number, limit: number, title?: string, year?: number, genres?: string
     ): Promise<Movie[]>
-    findById(id: string): Promise<Movie | null>
+    findById(userId: string, id: string): Promise<Movie | null>
     update(
         id: string, 
         movie: Partial<Pick<Movie, "title" | "description" | "director" | "genres" | "year">>

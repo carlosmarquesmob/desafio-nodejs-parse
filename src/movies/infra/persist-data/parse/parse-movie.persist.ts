@@ -29,10 +29,12 @@ export class ParseMoviePersist implements PersistMovieData {
     }
 
     async findAll(
-        page: number, limit: number, title?: string, year?: number, genres?: string
+        userId: string, page: number, limit: number, title?: string, year?: number, genres?: string
     ): Promise<Movie[]> {
         try {
             const query = new Parse.Query(CLASS)
+
+            query.equalTo("userId", userId)
 
             query.skip((page - 1) * limit)
             query.limit(limit)
@@ -52,9 +54,10 @@ export class ParseMoviePersist implements PersistMovieData {
         }
     }
     
-    async findById(id: string): Promise<Movie | null> {
+    async findById(userId: string, id: string): Promise<Movie | null> {
         try {
             const query = new Parse.Query(CLASS)
+            query.equalTo("userId", userId)
             const result = await query.get(id, { useMasterKey: true })
             if(!result) return null
             return toPersistMovieDomain(result) 
