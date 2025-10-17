@@ -88,7 +88,6 @@ Após encaminhar seu teste você será convidado para um novo bate papo e querem
 ![Fastify](https://img.shields.io/badge/Fastify-000000?style=for-the-badge&logo=fastify&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
 ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
 
 ### Funcionalidades implementadas
@@ -139,6 +138,7 @@ A documentação completa está disponível em: `http://localhost:3001/docs`
 #### Autenticação
 - `POST /auth/sign-up` - Criar conta
 - `POST /auth/sign-in` - Login
+- `POST /auth/logout`  - Excluir sessão
 
 #### Filmes
 - `POST /movies` - Criar filme(s)
