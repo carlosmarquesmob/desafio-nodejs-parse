@@ -7,10 +7,17 @@ import { movieRoutes } from './movies/infra/movie.handler'
 import { errorHandler } from './common/handlers/error-handler'
 import { userRoutes } from './user/infra/user.handler'
 import { authRoutes } from './auth/infra/auth.handler'
+import multipart from '@fastify/multipart'
 
 const app = fastify({
     logger: true
 }).withTypeProvider<ZodTypeProvider>()
+
+app.register(multipart, {
+    limits: {
+        fileSize: 5000000
+    }
+})
 
 app.addHook("onError", async (req, reply, err) => {
     req.log.error({

@@ -55,8 +55,8 @@ export async function movieRoutes(app: FastifyTypedInstance) {
         let { limit, genres, page, title, year } = req.query
         const { currentUser } = req
 
-        if(!limit || limit < 1) limit = 10
-        if(!page || page < 1) page = 1
+        if (!limit || limit < 1) limit = 10
+        if (!page || page < 1) page = 1
 
         const movies = await movieService.listMovies(currentUser.id!, {
             page, limit, genres, title, year
@@ -65,7 +65,7 @@ export async function movieRoutes(app: FastifyTypedInstance) {
         return reply.code(200).send(movies)
     })
 
-    r.get(":id", {
+    r.get("/:id", {
         schema: {
             tags: swaggerTags,
             summary: "Find Movie By Id",
@@ -82,7 +82,7 @@ export async function movieRoutes(app: FastifyTypedInstance) {
         return reply.code(200).send(movie)
     })
 
-    r.put(":id", {
+    r.put("/:id", {
         schema: {
             tags: swaggerTags,
             summary: "Update Movie",
@@ -108,7 +108,7 @@ export async function movieRoutes(app: FastifyTypedInstance) {
         return reply.code(200).send({ message: "Movie updated successfully" })
     })
 
-    r.delete(":id", {
+    r.delete("/:id", {
         schema: {
             tags: swaggerTags,
             summary: "Delete Movie",
@@ -124,5 +124,34 @@ export async function movieRoutes(app: FastifyTypedInstance) {
         await movieService.deleteMovie(currentUser.id!, id)
 
         return reply.code(204).send({ message: "Movie deleted successfully" })
+    })
+
+    r.post("/:id/add-image", {
+        schema: {
+            tags: swaggerTags,
+            summary: "Add Image Movie",
+            description: "Upload and attach an image to a movie",
+            security: [{ bearerAuth: [] }],
+            params: z.object({
+                id: z.string()
+            })
+        },
+    }, async (req, reply) => {
+        const { id } = req.params
+        const { sessionToken } = req
+        const data = await req.file()
+
+        if (!data) {
+            return reply.code(400).send({
+                message: "No file uploaded or request is not multipart"
+            })
+        }
+
+        const buffer = await data.toBuffer()
+        const fileName = data.filename
+
+        const { url } = await movieService.addMovieImage(sessionToken, id, fileName, buffer, data.mimetype)
+
+        return reply.code(200).send({ imageUrl: url })
     })
 }

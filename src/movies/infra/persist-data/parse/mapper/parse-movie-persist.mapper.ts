@@ -19,7 +19,14 @@ export function toParseMoviePersist(
 export function toPersistMovieDomain(
     parseObject: Parse.Object
 ): Movie {
-    const { userId, title, description, year, director, genres, createdAt, updatedAt } = parseObject.attributes
+    const { 
+        userId, title, description, year, director, genres, createdAt, updatedAt 
+    } = parseObject.attributes
+
+    const parseFile = parseObject.get("coverImage")
+
+    const coverImageUrl = parseFile ? parseFile.url() : null
+
     return new Movie({
         id: parseObject._getId(),
         userId,
@@ -28,6 +35,7 @@ export function toPersistMovieDomain(
         year,
         director,
         genres,
+        coverImage: coverImageUrl,
         createdAt,
         updatedAt,
     })

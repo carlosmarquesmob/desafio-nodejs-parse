@@ -22,7 +22,7 @@ export class ParseMoviePersist implements PersistMovieData {
             return movieObject.map(toPersistMovieDomain)
         } catch (err) {
             parseServerErrorHandler({
-                err, log: this.log, className: "MOVIE", action: "create movie"
+                err, log: this.log, className: CLASS, action: "create movie"
             })
             throw err
         }
@@ -48,7 +48,7 @@ export class ParseMoviePersist implements PersistMovieData {
             return result.map(toPersistMovieDomain)
         }catch(err) {
             parseServerErrorHandler({
-                err, log: this.log, className: "MOVIE", action: "find all movies"
+                err, log: this.log, className: CLASS, action: "find all movies"
             })
             throw err
         }
@@ -66,7 +66,7 @@ export class ParseMoviePersist implements PersistMovieData {
                 return null
             }
             parseServerErrorHandler({
-                err, log: this.log, className: "MOVIE", action: "find movie"
+                err, log: this.log, className: CLASS, action: "find movie"
             })
             throw err
         }
@@ -90,7 +90,7 @@ export class ParseMoviePersist implements PersistMovieData {
             await movieParse.save({ useMasterKey: true })
         } catch(err) {
             parseServerErrorHandler({
-                err, log: this.log, className: "MOVIE", action: "update movie"
+                err, log: this.log, className: CLASS, action: "update movie"
             })
             throw err
         }
@@ -103,7 +103,35 @@ export class ParseMoviePersist implements PersistMovieData {
             await movieParse.destroy({ useMasterKey: true })
         }catch(err) {
             parseServerErrorHandler({
-                err, log: this.log, className: "MOVIE", action: "delete movie"
+                err, log: this.log, className: CLASS, action: "delete movie"
+            })
+            throw err
+        }
+    }
+    
+    async addMovieImage(
+        token: string,
+        movieId: string,
+        filename: string,
+        buffer: Buffer,
+        mimetype: string
+    ): Promise<{ url: string }> {
+        try {
+            const parseFile = new Parse.File(filename, Array.from(buffer), mimetype);
+
+            await parseFile.save({ sessionToken: token })
+
+            const MovieClass = Parse.Object.extend("Movie")
+            const query = new Parse.Query(MovieClass)
+            const movieObject = await query.get(movieId, { useMasterKey: true, sessionToken: token })
+
+            movieObject.set("coverImage", parseFile)
+            await movieObject.save(null, { useMasterKey: true, sessionToken: token })
+
+            return { url: parseFile.url()! }
+        } catch (err) {
+            parseServerErrorHandler({
+                err, log: this.log, className: CLASS, action: "add movie image"
             })
             throw err
         }

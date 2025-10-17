@@ -5,4 +5,5 @@ export type MovieDTO = {
     year?: number
     genres?: string
     director?: string
+    coverImage?: string
 }

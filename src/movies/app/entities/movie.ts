@@ -7,6 +7,7 @@ export class Movie {
     year?: number
     director?: string
     genres?: string
+    coverImage?: string
     createdAt: Date
     updatedAt: Date
 

@@ -67,4 +67,14 @@ export class MovieService {
 
         await this.persistMovie.delete(movieId)
     }
+
+    async addMovieImage(
+        token: string, 
+        movieId: string,
+        filename: string, 
+        buffer: Buffer,
+        mimetype: string
+    ): Promise<{ url: string }> {
+        return await this.persistMovie.addMovieImage(token, movieId, filename, buffer, mimetype)
+    }
 }

@@ -12,5 +12,11 @@ export interface PersistMovieData {
         movie: Partial<Pick<Movie, "title" | "description" | "director" | "genres" | "year">>
     ): Promise<void>
     delete(id: string): Promise<void>
-
+    addMovieImage(
+        token: string,
+        movieId: string,
+        filename: string,
+        buffer: Buffer,
+        mimetype: string
+    ): Promise<{ url: string }>
 }
