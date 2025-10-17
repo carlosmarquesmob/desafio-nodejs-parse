@@ -34,3 +34,127 @@ A Aplicação não precisa conter interface visual. O que importa é seu style c
 
 ## Após os testes queremos seu feedback
 Após encaminhar seu teste você será convidado para um novo bate papo e queremos o seu feedback sobre o que achou desse teste.
+
+## O que foi desenvolvido
+
+### Estrutura do projeto
+
+```
+/src
+  ├── /auth          # Lógica de autenticação do usuário
+  ├── /common        # Métodos e funções compartilhadas entre módulos
+  ├── /config        # Arquivos de configuração
+  ├── /movies        # CRUD de filmes
+  └── /user          # Lógica de tratamento de dados do usuário
+```
+
+### Módulos implementados
+
+#### 🔐 Auth
+![Auth Flow](https://img.shields.io/badge/Auth-JWT-green?style=flat-square&logo=jsonwebtokens)
+
+- **Autenticação JWT**: Sistema completo de login/registro
+- **Middleware de autenticação**: Proteção de rotas privadas
+- **Integração com Parse Server**: Gerenciamento de sessões
+
+#### 🎬 Movies
+- **CRUD completo**: Criar, listar, buscar, atualizar e deletar filmes
+- **Upload de imagens**: Endpoint para adicionar poster aos filmes
+- **Filtros de busca**: Por título, ano e gênero
+- **Paginação**: Listagem com controle de limite e página
+
+#### 👤 User
+- **Gerenciamento de usuários**: Criação e manipulação de dados
+- **Integração com autenticação**: Vinculação com sistema de auth
+
+#### 🛠️ Common
+- **Tratamento de erros**: Sistema centralizado de exceções
+- **Middlewares**: Funcionalidades compartilhadas
+- **Types**: Definições de tipos TypeScript
+
+#### ⚙️ Config
+- **Variáveis de ambiente**: Configuração centralizada
+- **Parse Server**: Inicialização e configuração
+- **Validação**: Schemas com Zod
+
+### Fluxo de Autenticação
+
+![Fluxo de Autenticação](./assets/auth-flow.png)
+
+### Tecnologias utilizadas
+
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![Fastify](https://img.shields.io/badge/Fastify-000000?style=for-the-badge&logo=fastify&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
+
+### Funcionalidades implementadas
+
+✅ **Autenticação JWT**  
+✅ **Cadastrar filmes** (um ou múltiplos)  
+✅ **Listar filmes** com paginação  
+✅ **Atualizar filme** por ID  
+✅ **Buscar filmes** por título, ano e gênero  
+✅ **Upload de poster** para filmes  
+✅ **Documentação Swagger**  
+✅ **Tratamento de erros**  
+✅ **Arquitetura limpa** com separação de responsabilidades  
+
+### Como executar
+
+1. **Clone o repositório**
+```bash
+git clone <repo-url>
+cd desafio-nodejs-parse
+```
+
+2. **Configure as variáveis de ambiente**
+```bash
+cp .env.example .env
+# Edite o arquivo .env com suas configurações
+```
+
+3. **Inicie os serviços com Docker**
+```bash
+docker-compose up -d
+```
+
+4. **Instale as dependências**
+```bash
+pnpm install
+```
+
+5. **Execute a aplicação**
+```bash
+pnpm run start:dev
+```
+
+### Endpoints disponíveis
+
+A documentação completa está disponível em: `http://localhost:3001/docs`
+
+#### Autenticação
+- `POST /auth/sign-up` - Criar conta
+- `POST /auth/sign-in` - Login
+
+#### Filmes
+- `POST /movies` - Criar filme(s)
+- `GET /movies` - Listar filmes
+- `GET /movies/:id` - Buscar filme por ID
+- `PUT /movies/:id` - Atualizar filme
+- `DELETE /movies/:id` - Deletar filme
+- `POST /movies/:id/add-image` - Upload de poster
+
+### Arquitetura
+
+O projeto segue os princípios de **Clean Architecture** com separação clara de responsabilidades:
+
+- **Handlers** (Infra): Controladores HTTP
+- **Services** (App): Regras de negócio
+- **Entities** (App): Modelos de domínio
+- **Repositories** (Infra): Acesso a dados
+- **DTOs** (App): Objetos de transferência de dados
+
